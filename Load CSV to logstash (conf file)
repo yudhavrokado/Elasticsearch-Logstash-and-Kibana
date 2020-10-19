@@ -1,0 +1,37 @@
+input {
+    stdin { }
+    }
+filter {
+    csv {
+        separator => ","
+        columns => ["Nama_Properti","Tipe","Jenis","Cluster","Blok","Nama_Perusahaan","Lokasi","Harga","KPR","Luas_Tanah","Luas_Bangunan","Kamar_Tidur","Kamar_mandi","Latitude","Longitude","status_properti","link","Tanggal_crawl"]
+    }
+    mutate {
+        convert => {
+            "Nama_Properti" => "string"
+            "Tipe" => "string"
+            "Jenis" => "string"
+            "Cluster" => "string"
+            "Blok" => "string"
+            "Nama_Perusahaan" => "string"
+            "Lokasi" => "string"
+            "Harga" => "integer"
+            "KPR" => "integer"
+            "Luas_Tanah" => "integer"
+            "Luas_Bangunan" => "integer"
+            "Kamar_Tidur" => "integer"
+            "Kamar_mandi" => "integer"
+            "longitude" => "float"
+            "latitude" => "float"
+            "status_properti" => "string"
+        }
+        add_field => {"Location" => "%{Latitude}, %{Longitude}"}
+    }
+}
+output{
+    elasticsearch {
+        hosts => "localhost:9200"
+        index => "test"
+    }
+    stdout{ codec => rubydebug}
+}
